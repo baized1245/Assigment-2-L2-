@@ -58,6 +58,30 @@ const getSingleProductFromDB = async (req: Request, res: Response) => {
   }
 };
 
+// Update a product from database (controller)
+const updateAProductFromDB = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const updatedData = req.body;
+    const updatedProduct = await ProductService.updateAProductFromDB(
+      productId,
+      updatedData
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully!",
+      data: updatedProduct,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
 // Delete single product from DB (controller)
 const deleteProductFromDB = async (req: Request, res: Response) => {
   try {
@@ -83,4 +107,5 @@ export const ProductController = {
   getAllProductFromDB,
   getSingleProductFromDB,
   deleteProductFromDB,
+  updateAProductFromDB,
 };
