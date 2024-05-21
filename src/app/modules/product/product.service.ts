@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose";
 import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 
@@ -7,10 +8,11 @@ const createProductIntoDb = async (productData: TProduct) => {
   return result;
 };
 
-// Get all product from DB (service)
-const getAllProductFromDB = async () => {
-  const result = await Product.find();
-  return result;
+// Function to search products based on criteria or get all products if no criteria provided
+const getAllProductFromDB = async (
+  searchTerm: FilterQuery<TProduct> = {}
+): Promise<TProduct[]> => {
+  return Product.find(searchTerm).exec();
 };
 
 // Get single product from DB (service)

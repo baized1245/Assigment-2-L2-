@@ -11,10 +11,10 @@ router.get("/", ProductController.getAllProductFromDB);
 // Single product get route
 router.get("/:productId", ProductController.getSingleProductFromDB);
 
-// Product delete route
-router.delete("/:productId", ProductController.deleteProductFromDB);
-
 // Product update route
 router.put("/:productId", ProductController.updateAProductFromDB);
+
+// Product delete route
+router.delete("/:productId", ProductController.deleteProductFromDB);
 
 export const ProductRoutes = router;

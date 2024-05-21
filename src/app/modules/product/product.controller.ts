@@ -1,5 +1,7 @@
+import { FilterQuery } from "mongoose";
 import { Request, Response } from "express";
 import { ProductService } from "./product.service";
+import { TProduct } from "./product.interface";
 
 // New product add into DB (controller)
 const createProduct = async (req: Request, res: Response) => {
@@ -21,14 +23,48 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Get all products from DB (controller)
-const getAllProductFromDB = async (req: Request, res: Response) => {
+// Controller to handle getting all products or searching products
+const getAllProductFromDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const result = await ProductService.getAllProductFromDB();
+    const searchTerm: FilterQuery<TProduct> = {};
+    const searchTerms: string[] = [];
+
+    // Dynamically build the search criteria based on query parameters
+    if (req.query.name) {
+      searchTerm.name = { $regex: req.query.name as string, $options: "i" };
+      searchTerms.push(`'${req.query.name}'`);
+    }
+    if (req.query.description) {
+      searchTerm.description = {
+        $regex: req.query.description as string,
+        $options: "i",
+      };
+      searchTerms.push(`'${req.query.description}'`);
+    }
+    if (req.query.category) {
+      searchTerm.category = {
+        $regex: req.query.category as string,
+        $options: "i",
+      };
+      searchTerms.push(`'${req.query.category}'`);
+    }
+
+    const products = await ProductService.getAllProductFromDB(searchTerm);
+
+    const message =
+      searchTerms.length > 0
+        ? `Products matching search term ${searchTerms.join(
+            ", "
+          )} fetched successfully!`
+        : "Products fetched successfully!";
+
     res.status(200).json({
       success: true,
-      message: "Products fetched successfully!",
-      data: result,
+      message: message,
+      data: products,
     });
   } catch (error: any) {
     res.status(500).json({
