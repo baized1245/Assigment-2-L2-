@@ -5,7 +5,7 @@ import { TProduct } from "./product.interface";
 import ProductValidationSchema from "./product.validation";
 
 // New product add into DB (controller)
-const createProduct = async (req: Request, res: Response) => {
+const createProduct = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = req.body;
 
@@ -81,7 +81,10 @@ const getAllProductFromDB = async (
 };
 
 // Get single product from DB (controller)
-const getSingleProductFromDB = async (req: Request, res: Response) => {
+const getSingleProductFromDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { productId } = req.params;
     const result = await ProductService.getSingleProductFromDB(productId);
@@ -100,7 +103,10 @@ const getSingleProductFromDB = async (req: Request, res: Response) => {
 };
 
 // Update a product from database (controller)
-const updateAProductFromDB = async (req: Request, res: Response) => {
+const updateAProductFromDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { productId } = req.params;
     const updatedData = req.body;
@@ -124,7 +130,10 @@ const updateAProductFromDB = async (req: Request, res: Response) => {
 };
 
 // Delete single product from DB (controller)
-const deleteProductFromDB = async (req: Request, res: Response) => {
+const deleteProductFromDB = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { productId } = req.params;
     const result = await ProductService.deleteAProductFromDb(productId);

@@ -1,3 +1,4 @@
+import { FilterQuery } from "mongoose";
 import { TOrder } from "./order.interface";
 import { Order } from "./order.model";
 
@@ -7,12 +8,13 @@ const createOrderIntoDb = async (OrderData: TOrder) => {
   return result;
 };
 
-// get all order from DB (service)
-const getAllOrderFromDb = async () => {
-  const result = await Order.find();
+// Function to search order based on email or get all order if no email provided
+const getAllOrderFromDb = async (email: FilterQuery<TOrder> = {}) => {
+  const result = await Order.find(email);
   return result;
 };
 
+// exporting orderService methods
 export const OrderService = {
   createOrderIntoDb,
   getAllOrderFromDb,
