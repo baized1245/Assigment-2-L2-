@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProductService } from "./product.service";
 
-// New product add into DB controller
+// New product add into DB (controller)
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
@@ -9,7 +9,7 @@ const createProduct = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "New product added successfully",
+      message: "Product created successfully!",
       data: result,
     });
   } catch (error: any) {
@@ -21,13 +21,13 @@ const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// All product get from DB controller
-const getAllProduct = async (req: Request, res: Response) => {
+// Get all products from DB (controller)
+const getAllProductFromDB = async (req: Request, res: Response) => {
   try {
     const result = await ProductService.getAllProductFromDB();
     res.status(200).json({
       success: true,
-      message: "Product are retrived successfully",
+      message: "Products fetched successfully!",
       data: result,
     });
   } catch (error: any) {
@@ -39,7 +39,28 @@ const getAllProduct = async (req: Request, res: Response) => {
   }
 };
 
+// Get single product from DB (controller)
+const getSingleProductFromDB = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const result = await ProductService.getSingleProductFromDB(productId);
+    res.status(200).json({
+      success: true,
+      message: "Product fetched successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
+};
+
+// exporting all methods
 export const ProductController = {
   createProduct,
-  getAllProduct,
+  getAllProductFromDB,
+  getSingleProductFromDB,
 };
