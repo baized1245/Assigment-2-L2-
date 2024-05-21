@@ -2,12 +2,17 @@ import { FilterQuery } from "mongoose";
 import { Request, Response } from "express";
 import { ProductService } from "./product.service";
 import { TProduct } from "./product.interface";
+import ProductValidationSchema from "./product.validation";
 
 // New product add into DB (controller)
 const createProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
-    const result = await ProductService.createProductIntoDb(product);
+
+    // data validation using zod
+    const zodParseData = ProductValidationSchema.parse(product);
+
+    const result = await ProductService.createProductIntoDb(zodParseData);
 
     res.status(200).json({
       success: true,
