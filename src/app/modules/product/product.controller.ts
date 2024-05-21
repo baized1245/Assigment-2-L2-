@@ -139,7 +139,7 @@ const deleteProductFromDB = async (
     const result = await ProductService.deleteAProductFromDb(productId);
     res.status(200).json({
       success: true,
-      message: "Student is deleted successfully",
+      message: "Product is deleted successfully",
       data: null,
     });
   } catch (error: any) {
@@ -151,6 +151,14 @@ const deleteProductFromDB = async (
   }
 };
 
+// Handle route not found
+const routeNotFound = (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+};
+
 // exporting all methods
 export const ProductController = {
   createProduct,
@@ -158,4 +166,5 @@ export const ProductController = {
   getSingleProductFromDB,
   deleteProductFromDB,
   updateAProductFromDB,
+  routeNotFound,
 };

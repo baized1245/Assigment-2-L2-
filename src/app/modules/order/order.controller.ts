@@ -4,26 +4,27 @@ import { FilterQuery } from "mongoose";
 import { TOrder } from "./order.interface";
 import OrderValidationSchema from "./order.validation";
 
-// New Order add into DB (controller)
-const createOrder = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const orderData = req.body;
-    // data validation using zod
-    const zodParseData = OrderValidationSchema.parse(orderData);
-    const result = await OrderService.createOrderIntoDb(zodParseData);
-    res.status(200).json({
-      success: true,
-      message: "Order created successfully!",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "Something went wrong",
-      error: error,
-    });
-  }
-};
+// // original
+// // New Order add into DB (controller)
+// const createOrder = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const orderData = req.body;
+//     // data validation using zod
+//     const zodParseData = OrderValidationSchema.parse(orderData);
+//     const result = await OrderService.createOrderIntoDb(zodParseData);
+//     res.status(200).json({
+//       success: true,
+//       message: "Order created successfully!",
+//       data: result,
+//     });
+//   } catch (error: any) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message || "Something went wrong",
+//       error: error,
+//     });
+//   }
+// };
 
 // Controller to handle getting all order or searching order by email
 const getAllOrderFromDb = async (
@@ -63,8 +64,55 @@ const getAllOrderFromDb = async (
   }
 };
 
+// gpt
+const createOrder = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const orderData: TOrder = req.body;
+    // Data validation using Zod
+    const zodParseData = OrderValidationSchema.parse(orderData);
+
+    const result = await OrderService.createOrderIntoDb(zodParseData);
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        error: error.errors,
+      });
+    } else if (
+      error.message === "Order not found" ||
+      error.message === "Insufficient quantity available in inventory"
+    ) {
+      res.status(400).json({
+        success: false,
+        message: error.message,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Something went wrong",
+        error: error.message,
+      });
+    }
+  }
+};
+
+// Handle route not found
+const routeNotFound = (req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+};
+
 // exporting OrderController all methods
 export const OrderController = {
   createOrder,
   getAllOrderFromDb,
+  routeNotFound,
 };
