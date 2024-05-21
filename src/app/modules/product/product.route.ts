@@ -17,7 +17,4 @@ router.put("/:productId", ProductController.updateAProductFromDB);
 // Product delete route
 router.delete("/:productId", ProductController.deleteProductFromDB);
 
-// Route not found handler
-router.use(ProductController.routeNotFound);
-
 export const ProductRoutes = router;

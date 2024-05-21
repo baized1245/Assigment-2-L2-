@@ -4,28 +4,6 @@ import { FilterQuery } from "mongoose";
 import { TOrder } from "./order.interface";
 import OrderValidationSchema from "./order.validation";
 
-// // original
-// // New Order add into DB (controller)
-// const createOrder = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const orderData = req.body;
-//     // data validation using zod
-//     const zodParseData = OrderValidationSchema.parse(orderData);
-//     const result = await OrderService.createOrderIntoDb(zodParseData);
-//     res.status(200).json({
-//       success: true,
-//       message: "Order created successfully!",
-//       data: result,
-//     });
-//   } catch (error: any) {
-//     res.status(500).json({
-//       success: false,
-//       message: error.message || "Something went wrong",
-//       error: error,
-//     });
-//   }
-// };
-
 // Controller to handle getting all order or searching order by email
 const getAllOrderFromDb = async (
   req: Request,
@@ -64,7 +42,7 @@ const getAllOrderFromDb = async (
   }
 };
 
-// gpt
+// Controller to handle creating a new order
 const createOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const orderData: TOrder = req.body;
