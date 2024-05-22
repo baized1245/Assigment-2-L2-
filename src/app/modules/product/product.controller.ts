@@ -136,7 +136,7 @@ const deleteProductFromDB = async (
 ): Promise<void> => {
   try {
     const { productId } = req.params;
-    const result = await ProductService.deleteAProductFromDb(productId);
+    await ProductService.deleteAProductFromDb(productId);
     res.status(200).json({
       success: true,
       message: "Product is deleted successfully",
